@@ -42,7 +42,7 @@
         google.charts.setOnLoadCallback(drawChart);
         function drawChart() {
             $.ajax({
-                url: "http://localhost:4567/?type=" + $("#s_currency").val(),
+                url: "http://18.221.104.106:4567/?type=" + $("#s_currency").val(),
                 type: "GET"
             }).done(function(data) {
                 var dataTable = new google.visualization.DataTable();
