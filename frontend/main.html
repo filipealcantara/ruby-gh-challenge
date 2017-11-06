@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <title>Sell Price Currencies</title>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css"
+          integrity="sha384-PsH8R72JQ3SOdhVi3uxftmaW6Vc51MKb0q5P2rRUpPvrszuE4W1povHYgTpBfshb"
+          crossorigin="anonymous">
+</head>
+
+<body>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col text-center">
+                <h1>Choose your currency</h1>
+                <select id="s_currency">
+                    <option value="dollar">Dollar</option>
+                    <option value="euro">Euro</option>
+                    <option value="bitcoin">Bitcoin</option>
+                </select>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col">
+                <div id="line_chart" style="height: 500px"></div>
+            </div>
+        </div>
+    </div>
+    <!-- Jquery -->
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js"
+            integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
+            crossorigin="anonymous"></script>
+    <!-- Google JS for charts -->
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script type="text/javascript">
+        google.charts.load('current', { 'packages': ['corechart'] });
+        google.charts.setOnLoadCallback(drawChart);
+        function drawChart() {
+            $.ajax({
+                url: "http://localhost:4567/?type=" + $("#s_currency").val(),
+                type: "GET"
+            }).done(function(data) {
+                var dataTable = new google.visualization.DataTable();
+                dataTable.addColumn('string', 'Time');
+                dataTable.addColumn('number', 'Buy Price');                
+                $(data).each(function(idx, item){
+                    dataTable.addRow([item.createdDateTime, item.buy])
+                });
+                var options = {
+                    title: 'Currency Timeline',
+                    legend: { position: 'bottom' }
+                };
+    
+                var chart = new google.visualization.LineChart(document.getElementById('line_chart'));
+    
+                chart.draw(dataTable, options);
+            }).fail(function() {
+                alert("$.get failed!");
+            });
+        }
+
+        $(document).ready(function(){
+            $("#s_currency").change(function(){
+                drawChart();
+            });
+        })
+    </script>
+</body>
+
+</html>
