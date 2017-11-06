@@ -30,6 +30,9 @@ def get_last_10(type)
     return result
 end
 
+# Enable external calls
+set :bind, '0.0.0.0'
+
 # To enable cross origin requests for all routes:
 configure do
     enable :cross_origin
